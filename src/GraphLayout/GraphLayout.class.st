@@ -1,9 +1,6 @@
 Class {
 	#name : #GraphLayout,
 	#superclass : #AbstractGraphLayout,
-	#instVars : [
-		'debugIndex'
-	],
 	#category : #'GraphLayout-core'
 }
 
@@ -36,49 +33,40 @@ GraphLayout >> draw [
 
 	"Algorithme de dessin inspiré des travaux de William Tutte 'How to draw a Graph' 1963"
 
-	| position sousEnsemble cpt size rad center angleIncr angle |
-	"Choix d'un sous ensemble de sommet."
-	sousEnsemble := OrderedCollection new.
-	cpt := 1.
-	size := nodes size / 2.
-	nodes do: [ :node | 
-		cpt <= size ifTrue: [ sousEnsemble addLast: node ].
-		cpt := cpt + 1 ].
-
-	" Choix d'une position initiale pour chacun des noeuds du sous ensemble.
-	  Pour représenter ces noeuds, nous avons décidé de copier de la représentation d'un graphe circulaire (Voir RSCircleLayout#doExecute: elements) "
-	position := Point x: 0 y: 0.
-	rad := size * 11.
-	center := Point x: rad y: rad.
-	angleIncr := 2 * Float pi / nodes size.
-	angle := 0.
-
-	sousEnsemble do: [ :node | 
-		| point |
-		point := center + (Point r: rad theta: angle).
-		angle := angle + angleIncr.
-		translator translateTopLeftOf: node to: point ].
-
-	"Pour chaque sommet on calcule la position du noeud par rapport à ses voisins."
-	position := Point x: 0 y: 0.
-
-	nodes do: [ :node | 
-		(sousEnsemble includes: node) ifFalse: [ 
-			| deg |
-			deg := self deg: node.
-			position := deg > 0
-				            ifTrue: [ Point x: 1 / deg y: 1 / deg ]
-				            ifFalse: [ Point x: 1 y: 1 ].
-			position := position * (self computeNeighborPositions: node).
-			translator translateTopLeftOf: node to: position ] ]
+	| subSetOfNodes |
 	
-	"Correction des noeuds proches ?"
+	subSetOfNodes := self subSetOfNodes.
+	self rearrangeAsCircleGraph: subSetOfNodes.
+	self rearrangeWithBarycentricAlgorithm: subSetOfNodes
 	"self rearrangeNodes"
 ]
 
 { #category : #accessing }
 GraphLayout >> neighbors: aNode [
 	^ aNode connectedLines.
+]
+
+{ #category : #initialization }
+GraphLayout >> rearrangeAsCircleGraph: subSetOfNodes [
+
+	" Choix d'une position initiale pour chacun des noeuds du sous ensemble.
+	  Pour représenter ces noeuds, nous avons décidé de copier de la représentation d'un graphe circulaire (Voir RSCircleLayout#doExecute: elements) "
+
+	| angle position rad angleIncr center size |
+	
+	size := subSetOfNodes size.
+	
+	position := Point x: 0 y: 0.
+	rad := size * 11.
+	center := Point x: rad y: rad.
+	angleIncr := 2 * Float pi / nodes size.
+	angle := 0.
+	
+	subSetOfNodes do: [ :node | 
+		| point |
+		point := center + (Point r: rad theta: angle).
+		angle := angle + angleIncr.
+		translator translateTopLeftOf: node to: point ]
 ]
 
 { #category : #initialization }
@@ -100,4 +88,40 @@ GraphLayout >> rearrangeNodes [
 					ifFalse: [ 
 						((x < 0 and: x >= -30) and: (y < 0 and: y >= -30)) ifTrue: [ 
 							translator translateTopLeftOf: node to: pos + 30 ] ] ] ] ]
+]
+
+{ #category : #initialization }
+GraphLayout >> rearrangeWithBarycentricAlgorithm: subSetOfNodes [
+
+	"Pour chaque sommet on calcule la position du noeud par rapport à ses voisins."
+
+	| position |
+	position := Point x: 0 y: 0.
+
+	nodes do: [ :node | 
+		(subSetOfNodes includes: node) ifFalse: [ 
+			| deg |
+			deg := self deg: node.
+			position := deg > 0
+				            ifTrue: [ Point x: 1 / deg y: 1 / deg  ]
+				            ifFalse: [ Point x: 1 y: 1 ].
+			position := position * (self computeNeighborPositions: node).
+			translator translateTopLeftOf: node to: position ] ]
+]
+
+{ #category : #initialization }
+GraphLayout >> subSetOfNodes [
+
+	"Choix d'un sous ensemble de sommet."
+
+	| subSetOfNodes size cpt |
+	subSetOfNodes := OrderedCollection new.
+
+	cpt := 1.
+	size := nodes size / 2.
+	nodes do: [ :node | 
+		cpt <= size ifTrue: [ subSetOfNodes addLast: node ].
+		cpt := cpt + 1 ].
+	
+	^ subSetOfNodes
 ]
