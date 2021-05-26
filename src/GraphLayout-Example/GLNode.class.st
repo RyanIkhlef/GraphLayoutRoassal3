@@ -1,33 +1,33 @@
 Class {
-	#name : #GLENode,
+	#name : #GLNode,
 	#superclass : #Object,
 	#instVars : [
 		'id',
 		'matrix'
 	],
-	#category : #GraphLayoutExample
+	#category : #'GraphLayout-Example-utils'
 }
 
-{ #category : #'as yet unclassified' }
-GLENode >> connectedNode [
+{ #category : #setter }
+GLNode >> connectedNode [
 
 	matrix adjacentTo: self
 ]
 
 { #category : #accessing }
-GLENode >> id [
+GLNode >> id [
 
 	^ id
 ]
 
 { #category : #accessing }
-GLENode >> id: anObject [
+GLNode >> id: anObject [
 
 	id := anObject
 ]
 
 { #category : #accessing }
-GLENode >> matrix: anObject [
+GLNode >> matrix: anObject [
 
 	matrix := anObject
 ]

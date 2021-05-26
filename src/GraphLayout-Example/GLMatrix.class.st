@@ -1,14 +1,14 @@
 Class {
-	#name : #GLEMatrix,
+	#name : #GLMatrix,
 	#superclass : #Object,
 	#instVars : [
 		'data'
 	],
-	#category : #GraphLayoutExample
+	#category : #'GraphLayout-Example-utils'
 }
 
 { #category : #examples }
-GLEMatrix class >> example1 [
+GLMatrix class >> graphData1 [
 
 	| matrix |
 	matrix := self new.
@@ -25,7 +25,7 @@ GLEMatrix class >> example1 [
 ]
 
 { #category : #examples }
-GLEMatrix class >> example2 [
+GLMatrix class >> graphData2 [
 
 	| matrix |
 	matrix := self new.
@@ -43,7 +43,7 @@ GLEMatrix class >> example2 [
 ]
 
 { #category : #examples }
-GLEMatrix class >> example3 [
+GLMatrix class >> graphData3 [
 
 	| matrix |
 	matrix := self new.
@@ -58,7 +58,7 @@ GLEMatrix class >> example3 [
 ]
 
 { #category : #examples }
-GLEMatrix class >> example4 [
+GLMatrix class >> graphData4 [
 
 	| matrix |
 	matrix := self new.
@@ -93,7 +93,7 @@ GLEMatrix class >> example4 [
 ]
 
 { #category : #examples }
-GLEMatrix class >> exampleFriendList [
+GLMatrix class >> graphDataFriendList [
 
 	| matrix |
 	matrix := self new.
@@ -112,7 +112,7 @@ GLEMatrix class >> exampleFriendList [
 ]
 
 { #category : #examples }
-GLEMatrix class >> exampleLargeData [
+GLMatrix class >> graphDataLargeSize [
 
 	| matrix |
 	matrix := self new.
@@ -1329,7 +1329,7 @@ GLEMatrix class >> exampleLargeData [
 ]
 
 { #category : #examples }
-GLEMatrix class >> exampleLittleSizeData [
+GLMatrix class >> graphDataLittleSize [
 
 	| matrix |
 	matrix := self new.
@@ -1402,7 +1402,7 @@ GLEMatrix class >> exampleLittleSizeData [
 ]
 
 { #category : #examples }
-GLEMatrix class >> exampleMediumSizeData [
+GLMatrix class >> graphDataMediumSize [
 
 	| matrix |
 	matrix := self new.
@@ -1609,57 +1609,45 @@ GLEMatrix class >> exampleMediumSizeData [
 	^ matrix
 ]
 
-{ #category : #examples }
-GLEMatrix class >> exampleOneNode [
-
-	| matrix |
-	matrix := self new.
-
-	matrix at: 1 put: { 1 }.
-	
-	^ matrix
-	
-]
-
 { #category : #'instance creation' }
-GLEMatrix class >> newWith: anArray [
+GLMatrix class >> newWith: anArray [
 
 	^ self new
 		  data: anArray;
 		  yourself
 ]
 
-{ #category : #'as yet unclassified' }
-GLEMatrix >> adjacentTo: aNode [
+{ #category : #'getting node' }
+GLMatrix >> adjacentTo: aNode [
 	^ data at: aNode
 ]
 
-{ #category : #'as yet unclassified' }
-GLEMatrix >> at: aNode put: connectedNodes [
+{ #category : #'adding item' }
+GLMatrix >> at: aNode put: connectedNodes [
 
 	data at: aNode put: connectedNodes
 ]
 
 { #category : #accessing }
-GLEMatrix >> data [
+GLMatrix >> data [
 	^ data
 ]
 
 { #category : #accessing }
-GLEMatrix >> data: aDictionary [
+GLMatrix >> data: aDictionary [
 
 	data := aDictionary
 ]
 
-{ #category : #'as yet unclassified' }
-GLEMatrix >> initialize [
+{ #category : #initialize }
+GLMatrix >> initialize [
 
 	super initialize.
 	data := Dictionary new
 ]
 
 { #category : #accessing }
-GLEMatrix >> nodes [
+GLMatrix >> nodes [
 
 	^ data keys
 ]

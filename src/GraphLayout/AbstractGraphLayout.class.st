@@ -5,7 +5,7 @@ Class {
 		'nodes',
 		'alreadyLayoutedNodes'
 	],
-	#category : #GraphLayoutImpl
+	#category : #'GraphLayout-core'
 }
 
 { #category : #'instance creation' }

@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'debugIndex'
 	],
-	#category : #GraphLayoutImpl
+	#category : #'GraphLayout-core'
 }
 
 { #category : #'instance creation' }
@@ -12,7 +12,7 @@ GraphLayout class >> on: aCanvas [
 	super on: aCanvas
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #computing }
 GraphLayout >> computeNeighborPositions: aNode [
 
 	| neighbors point |
@@ -23,7 +23,7 @@ GraphLayout >> computeNeighborPositions: aNode [
 	^ point
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #computing }
 GraphLayout >> deg: aNode [
 
 	| neighbors |
@@ -76,7 +76,7 @@ GraphLayout >> draw [
 	"self rearrangeNodes"
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 GraphLayout >> neighbors: aNode [
 	^ aNode connectedLines.
 ]

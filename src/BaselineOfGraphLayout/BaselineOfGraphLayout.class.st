@@ -10,7 +10,7 @@ BaselineOfGraphLayout >> baseline: spec [
 	<baseline>
 	spec for: #common do: [ 
 		spec
-			package: 'GraphLayoutExample';
-			package: 'GraphLayoutImpl';
-			package: 'MyExample' with:  [ spec requires: #('GraphLayoutImpl') ]]
+			package: 'GraphLayout';
+			package: 'GraphLayout-Example'
+			with: [ spec requires: #( 'GraphLayout' ) ] ]
 ]
