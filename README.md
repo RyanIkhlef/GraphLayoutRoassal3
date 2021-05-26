@@ -7,6 +7,6 @@
 ```st
 Metacello new
     repository: 'https://github.com/RyanIkhlef/GraphLayoutRoassal3:main';
-    baseline: 'BaselineOfGraphLayout';
+    baseline: 'GraphLayout';
     load
 ```
