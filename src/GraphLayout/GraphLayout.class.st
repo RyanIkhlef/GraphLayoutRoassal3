@@ -36,9 +36,10 @@ GraphLayout >> draw [
 	| subSetOfNodes |
 	
 	subSetOfNodes := self subSetOfNodes.
-	self rearrangeAsCircleGraph: subSetOfNodes.
-	self rearrangeWithBarycentricAlgorithm: subSetOfNodes
-	"self rearrangeNodes"
+	"self rearrangeAsCircleGraph: subSetOfNodes."
+	self rearrangeRandomly: subSetOfNodes.
+	self rearrangeWithBarycentricAlgorithm: subSetOfNodes.
+	self rearrangeNodes
 ]
 
 { #category : #accessing }
@@ -82,12 +83,24 @@ GraphLayout >> rearrangeNodes [
 			node = node2 ifFalse: [ 
 				x := pos x - node2 position x.
 				y := pos y - node2 position y.
-				((x <= 30 and: x > 0) and: (y <= 30 and: y > 0))
-					ifTrue: [ 
-					translator translateTopLeftOf: node2 to: node2 position - 30 ]
-					ifFalse: [ 
-						((x < 0 and: x >= -30) and: (y < 0 and: y >= -30)) ifTrue: [ 
-							translator translateTopLeftOf: node to: pos + 30 ] ] ] ] ]
+				
+				]]]
+]
+
+{ #category : #initialization }
+GraphLayout >> rearrangeRandomly: subSetOfNodes [
+
+	" Choix d'une position initiale pour chacun des noeuds du sous ensemble.
+	 Pour représenter ces noeuds, nous prennons une position x,y aléatoire. "
+
+	| size value |
+	
+	size := subSetOfNodes size.
+	value := (nodes size * 40).
+	subSetOfNodes do: [ :node | 
+		| point |
+		point := (Random new nextBetween: (-1*value) and: value)  @ (Random new nextBetween: (-1*value) and: value). 
+		translator translateTopLeftOf: node to: point ]
 ]
 
 { #category : #initialization }
@@ -99,7 +112,7 @@ GraphLayout >> rearrangeWithBarycentricAlgorithm: subSetOfNodes [
 	position := Point x: 0 y: 0.
 
 	nodes do: [ :node | 
-		(subSetOfNodes includes: node) ifFalse: [ 
+		(subSetOfNodes includes: node) ifFalse: [
 			| deg |
 			deg := self deg: node.
 			position := deg > 0
