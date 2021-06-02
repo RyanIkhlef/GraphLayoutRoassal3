@@ -34,12 +34,12 @@ GraphLayout >> draw [
 	"Algorithme de dessin inspiré des travaux de William Tutte 'How to draw a Graph' 1963"
 
 	| subSetOfNodes |
-	
-	subSetOfNodes := self subSetOfNodes.
-	"self rearrangeAsCircleGraph: subSetOfNodes."
-	self rearrangeRandomly: subSetOfNodes.
+	subSetOfNodes := self subSetOfNodesSorted.
+	"subSetOfNodes := self subSetOfNodes."
+   self rearrangeAsCircleGraph: subSetOfNodes.
+	"self rearrangeRandomly: subSetOfNodes."
 	self rearrangeWithBarycentricAlgorithm: subSetOfNodes.
-	self rearrangeNodes
+	self separateClosestNodes
 ]
 
 { #category : #accessing }
@@ -68,23 +68,6 @@ GraphLayout >> rearrangeAsCircleGraph: subSetOfNodes [
 		point := center + (Point r: rad theta: angle).
 		angle := angle + angleIncr.
 		translator translateTopLeftOf: node to: point ]
-]
-
-{ #category : #initialization }
-GraphLayout >> rearrangeNodes [
-
-	"Check if two nodes are not too near. If it's true, move one of them"
-
-	nodes do: [ :node | 
-		| pos |
-		pos := node position.
-		nodes do: [ :node2 | 
-			| x y |
-			node = node2 ifFalse: [ 
-				x := pos x - node2 position x.
-				y := pos y - node2 position y.
-				
-				]]]
 ]
 
 { #category : #initialization }
@@ -123,6 +106,25 @@ GraphLayout >> rearrangeWithBarycentricAlgorithm: subSetOfNodes [
 ]
 
 { #category : #initialization }
+GraphLayout >> separateClosestNodes [
+
+	"Check if two nodes are not too near. If it's true, move them"
+
+	nodes do: [ :node1 | 
+		| posNode1 |
+		posNode1 := node1 position.
+		nodes do: [ :node2 | 
+			| x y posNode2 |
+			node1 = node2 ifFalse: [ 
+				posNode2 := node2 position.
+				x := posNode1 x - posNode2 x ** 2.
+				y := posNode1 y - posNode2 y ** 2.
+				x + y sqrt < 20 ifTrue: [ 
+					node2 position: posNode2 + 10.
+					node1 position: posNode1 - 10 ] ] ] ]
+]
+
+{ #category : #initialization }
 GraphLayout >> subSetOfNodes [
 
 	"Choix d'un sous ensemble de sommet."
@@ -136,5 +138,22 @@ GraphLayout >> subSetOfNodes [
 		cpt <= size ifTrue: [ subSetOfNodes addLast: node ].
 		cpt := cpt + 1 ].
 	
+	^ subSetOfNodes
+]
+
+{ #category : #initialization }
+GraphLayout >> subSetOfNodesSorted [
+
+	"Choix d'un sous ensemble de sommet. Renvoie les sommets possédant le plus de voisins."
+
+	| tmp subSetOfNodes size cpt |
+	subSetOfNodes := OrderedCollection new.
+	tmp := (nodes copy) sorted: [ :x :y | (self deg: x) > (self deg: y) ].
+	cpt := 1.
+	size := tmp size / 2.
+	tmp do: [ :node | 
+		cpt <= size ifTrue: [ subSetOfNodes addLast: node ].
+		cpt := cpt + 1 ].
+
 	^ subSetOfNodes
 ]
