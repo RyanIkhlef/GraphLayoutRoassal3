@@ -36,10 +36,10 @@ GraphLayout >> draw [
 	| subSetOfNodes |
 	subSetOfNodes := self subSetOfNodesSorted.
 	"subSetOfNodes := self subSetOfNodes."
-   self rearrangeAsCircleGraph: subSetOfNodes.
+	self rearrangeAsCircleGraph: subSetOfNodes.
 	"self rearrangeRandomly: subSetOfNodes."
 	self rearrangeWithBarycentricAlgorithm: subSetOfNodes.
-	self separateClosestNodes
+	[ self separateClosestNodes ] whileTrue
 ]
 
 { #category : #accessing }
@@ -110,6 +110,8 @@ GraphLayout >> separateClosestNodes [
 
 	"Check if two nodes are not too near. If it's true, move them"
 
+	| res |
+	res := false.
 	nodes do: [ :node1 | 
 		| posNode1 |
 		posNode1 := node1 position.
@@ -120,8 +122,9 @@ GraphLayout >> separateClosestNodes [
 				x := posNode1 x - posNode2 x ** 2.
 				y := posNode1 y - posNode2 y ** 2.
 				x + y sqrt < 20 ifTrue: [ 
-					node2 position: posNode2 + 10.
-					node1 position: posNode1 - 10 ] ] ] ]
+					translator translateCenterLeftOf: node1 to: posNode1 + 40.
+					res := true ] ] ] ].
+	^ res
 ]
 
 { #category : #initialization }
