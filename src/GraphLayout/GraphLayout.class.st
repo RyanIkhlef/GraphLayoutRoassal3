@@ -122,7 +122,7 @@ GraphLayout >> separateClosestNodes [
 				x := posNode1 x - posNode2 x ** 2.
 				y := posNode1 y - posNode2 y ** 2.
 				x + y sqrt < 40 ifTrue: [ 
-					translator translateTopLeftOf: node1 to: posNode1 * 2.
+					translator translateTopLeftOf: node2 to: posNode2 * 2.
 					res := true ] ] ] ].
 	^ res
 ]
